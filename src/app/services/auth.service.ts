@@ -71,4 +71,8 @@ export class AuthService {
 
     return this.userToken;
   }
+
+  isAuthenticated(): boolean {
+    return this.userToken.length !== 0;
+  }
 }
