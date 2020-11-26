@@ -3,12 +3,13 @@ import { Injectable } from "@angular/core";
 import { UserModel } from "../models/user.model";
 import { map } from "rxjs/operators";
 
+import { apikey } from "../../apikey";
+
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
   private url = "https://www.googleapis.com/identitytoolkit/v3/relyingparty";
-  private apikey = "AIzaSyCq3BcdrfX-DYXh0u03g8-SuG8UN6i08Ss";
 
   userToken: string;
 
@@ -31,7 +32,7 @@ export class AuthService {
     };
 
     return this.http
-      .post(`${this.url}/verifyPassword?key=${this.apikey}`, authData)
+      .post(`${this.url}/verifyPassword?key=${apikey}`, authData)
       .pipe(
         map((response) => {
           this.saveToken(response["idToken"]);
@@ -47,7 +48,7 @@ export class AuthService {
     };
 
     return this.http
-      .post(`${this.url}/signupNewUser?key=${this.apikey}`, authData)
+      .post(`${this.url}/signupNewUser?key=${apikey}`, authData)
       .pipe(
         map((response) => {
           this.saveToken(response["idToken"]);
