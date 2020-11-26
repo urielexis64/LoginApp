@@ -1,6 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { NgForm } from "@angular/forms";
+import Swal from "sweetalert2";
 import { UserModel } from "../../models/user.model";
+import { AuthService } from "../../services/auth.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-login",
@@ -10,7 +13,7 @@ import { UserModel } from "../../models/user.model";
 export class LoginComponent implements OnInit {
   user: UserModel;
 
-  constructor() {}
+  constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.user = new UserModel();
@@ -20,7 +23,29 @@ export class LoginComponent implements OnInit {
     if (form.invalid) {
       return;
     }
-    console.log(this.user);
-    console.log(form);
+
+    Swal.fire({
+      allowOutsideClick: false,
+      icon: "info",
+      text: "Please wait...",
+    });
+
+    Swal.showLoading();
+
+    this.auth.login(this.user).subscribe(
+      (response) => {
+        console.log(response);
+        Swal.close();
+        this.router.navigateByUrl("/home");
+      },
+      (err) => {
+        console.log(err.error.error.message);
+        Swal.fire({
+          title: "Authentication error",
+          icon: "error",
+          text: err.error.error.message,
+        });
+      }
+    );
   }
 }
