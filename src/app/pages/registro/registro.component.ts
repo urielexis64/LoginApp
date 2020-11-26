@@ -1,16 +1,33 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
+import { NgForm } from "@angular/forms";
+import { UserModel } from "../../models/user.model";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
-  selector: 'app-registro',
-  templateUrl: './registro.component.html',
-  styleUrls: ['./registro.component.css']
+  selector: "app-registro",
+  templateUrl: "./registro.component.html",
+  styleUrls: ["./registro.component.css"],
 })
 export class RegistroComponent implements OnInit {
+  user: UserModel;
 
+  constructor(private auth: AuthService) {}
 
-  constructor() { }
+  ngOnInit() {
+    this.user = new UserModel();
+  }
 
-  ngOnInit() { }
-
-
+  onSubmit(form: NgForm) {
+    if (form.invalid) {
+      return;
+    }
+    this.auth.newUser(this.user).subscribe(
+      (response) => {
+        console.log(response);
+      },
+      (err) => {
+        console.log(err.error.error.message);
+      }
+    );
+  }
 }
